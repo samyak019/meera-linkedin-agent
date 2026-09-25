@@ -15,13 +15,17 @@ app = Flask(__name__, template_folder=os.path.join(os.path.dirname(os.path.abspa
 MAX_INPUT_CHARS = 4000
 
 
-@app.route("/")
-def page():
+# Vercel's rewrite hands every request to this function, and the path Flask sees depends on the
+# runtime version, so route on method rather than path: GET serves the page, POST runs a note.
+@app.get("/", defaults={"_path": ""})
+@app.get("/<path:_path>")
+def page(_path):
     return render_template("web.html", has_key=llm.client is not None)
 
 
-@app.post("/api/run")
-def run():
+@app.post("/", defaults={"_path": ""})
+@app.post("/<path:_path>")
+def run(_path):
     text = ((request.json or {}).get("text") or "").strip()
     if len(text) < 5:
         return jsonify({"error": "Type a note first."}), 400
