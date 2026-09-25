@@ -1,5 +1,7 @@
 # Content Desk
 
+**Live page:** https://meera-linkedin-agent-lac.vercel.app · **Repo:** https://github.com/samyak019/meera-linkedin-agent
+
 Meera sends the bot a note (typed or a voice note). The note goes through a 4-stage pipeline and
 she gets back exactly one Telegram message: either feedback asking for more, or a LinkedIn draft
 ready to paste. **Nothing is ever posted automatically.**
