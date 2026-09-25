@@ -1,0 +1,6 @@
+content_desk.db
+.env
+venv/
+__pycache__/
+.vercel/
+.DS_Store

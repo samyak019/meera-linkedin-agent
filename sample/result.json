@@ -1,0 +1,15 @@
+{
+  "name": "notes to self",
+  "type": "private_channel",
+  "id": 1900000001,
+  "messages": [
+    {"id": 101, "type": "message", "date": "2026-06-03T23:12:40", "text": "Batch 214 of the niacinamide serum came back from stability at 40C/75%RH with a slight yellow tint at week 8. Formula identical to batch 209 which was fine. Only difference: new supplier for the glycerin. Took us 3 weeks to trace it. Everyone assumes the active is the problem. It's almost never the active."},
+    {"id": 102, "type": "message", "date": "2026-06-11T11:04:02", "text": "https://www.example.com/some-article-about-skincare-trends"},
+    {"id": 103, "type": "message", "date": "2026-06-19T22:47:15", "text": "Customer DM today: 'why is your sunscreen SPF 30 and not 50, is it weaker?' Third time this month. People think SPF is linear. SPF 30 blocks ~97% UVB, SPF 50 ~98%. The real variable is how much you apply - almost nobody applies 2mg/cm2."},
+    {"id": 104, "type": "message", "date": "2026-07-02T08:30:00", "text": "amma's birthday next week, book the hall"},
+    {"id": 105, "type": "message", "date": "2026-07-09T23:55:21", "text": "Thinking about how 'fragrance-free' on a label means nothing without knowing whether masking agents were used. Want to write about this at some point."},
+    {"id": 106, "type": "message", "date": "2026-07-22T14:18:09", "text": "We switched our moisturiser from a jar to an airless pump. Returns for 'texture changed' dropped a lot over the next quarter. Oxygen exposure every time you open a jar. People blame the formula."},
+    {"id": 107, "type": "message", "date": "2026-08-14T23:02:44", "text": ["Read that ", {"type": "bold", "text": "ceramide"}, " percentages on labels are mostly meaningless because brands list the ceramide complex %, not actual ceramide content. A 5% ceramide complex can be under 0.1% actual ceramides. Nobody asks for the breakdown."]},
+    {"id": 108, "type": "message", "date": "2026-08-30T19:40:10", "text": "ok"}
+  ]
+}

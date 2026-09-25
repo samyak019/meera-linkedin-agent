@@ -1,0 +1,10 @@
+# The local app (SQLite + Telegram listener) doesn't run on Vercel; only api/index.py does.
+app.py
+pipeline.py
+store.py
+telegram_ingest.py
+sample/
+*.db
+.env
+venv/
+__pycache__/

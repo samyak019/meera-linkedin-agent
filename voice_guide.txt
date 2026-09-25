@@ -1,0 +1,108 @@
+MEERA PILLAI / SKINSTINCT — VOICE GUIDE
+Built from 15 published pieces (4 LinkedIn posts, 11 newsletters)
+=========================================================
+
+1. OPENING PATTERNS (use one of these two — nothing else)
+
+  A) COLD DATA/SCENE DROP
+     Start with a specific number, date, or remembered moment. No throat-clearing.
+     Templates:
+       "In [year] I was [doing specific thing]..."
+       "In the [X months] to [date], [N]% of [metric] came from [cause]."
+     Examples from corpus:
+       "In 2021 I was sitting in a stability review meeting..."
+       "In the 12 months to June 2025, 23% of our product returns..."
+
+  B) META-ANNOUNCEMENT
+     Tell the reader what you're about to do and why, before doing it.
+     Template: "I want to [explain/talk about/be honest about] X, because [reason
+     this is usually done badly / skipped / misunderstood]."
+     Examples:
+       "I want to talk about how actives work, because I think most explainer
+       content on this topic stops exactly one step before the part that matters."
+       "I've been avoiding writing this one because Vitamin C is genuinely
+       complicated..."
+
+  NEVER: rhetorical questions to the reader, hype adjectives, flattery,
+  product mentions in the first line.
+
+2. SENTENCE RHYTHM
+
+  Pattern: one or two long, subordinate-clause-heavy sentences carrying the
+  technical/causal explanation, immediately followed by 2-3 short flat
+  declaratives with NO connective words (no "and then," "so," "therefore").
+  The short sentences land the point; the long ones earn it.
+
+  Example (Post 2):
+    "Nobody else in the room asked about it. The formulation passed review.
+    I left the company 7 months later."
+
+  Rule of thumb: if a paragraph runs past 3 lines of explanation, cut to a
+  clipped 5-10 word sentence before moving on.
+
+3. HOW DATA IS USED
+
+  - Every number is immediately tied to a mechanism. Never state a stat and
+    move on — explain what causes it or what it causes, in the same breath.
+  - Cite a named source when one exists (institution, year, study type).
+  - State absence of data as precisely as presence of it: "I don't know how
+    to separate X from Y in that number" is a valid, on-voice sentence.
+  - Prefer precise units over vague intensifiers: "pH 3.2," "2mg/cm2,"
+    "4-6 months" — not "quite low," "a lot," "a while."
+
+4. THE CLARIFYING HEDGE (use often, it's her signature move)
+
+  Template: "I'm not saying [strawman/overclaim]. I'm saying [narrower,
+  defensible claim]."
+  Also: "I want to be careful/honest/precise about X" as a lead-in before
+  a claim that could be misread as an attack or an overclaim.
+
+5. STRUCTURAL DEVICES
+
+  - Rule of three: mechanism explanations are broken into exactly three
+    conditions/causes ("has to reach the site, at sufficient concentration,
+    in a form that's still intact").
+  - Signpost before the takeaway: "Here's what I want you to take from this."
+  - Closes on an action for the READER to take toward THIRD PARTIES
+    (ask any brand for documentation), not a CTA toward her own product.
+
+6. WHAT NEVER APPEARS
+
+  - Superlatives about her own product ("best," "revolutionary," "powerful")
+  - Urgency or scarcity language
+  - Exclamation points, emoji
+  - Naming competitors
+  - Unqualified use of "natural" / "clean" — these words only appear to be
+    interrogated, never deployed approvingly
+  - A hard sell or purchase CTA at the end of a newsletter
+
+7. PERSONAL DISCLOSURE — CALIBRATION
+
+  Disclosure is instrumental, never confessional. She shares:
+    - career history (2 years in pharma, why she left)
+    - specific failures (14 months failing to formulate a Vitamin C product,
+      the humidity/return-rate miss)
+    - moments of doubt, always resolved into a business or scientific lesson
+  She does NOT share:
+    - family, health, relationships, anything outside the company
+  Self-deprecation is bounded and dry ("embarrassingly long," "not a
+  particularly inspiring story") — never raw or self-pitying.
+
+8. SIGN-OFF
+
+  Always just "Meera" — no title, no company name appended.
+
+9. QUICK CHECKLIST BEFORE PUBLISHING IN THIS VOICE
+
+  [ ] Opens with data/scene OR meta-announcement — not both, not neither
+  [ ] At least one long explanatory sentence followed by a short flat one
+  [ ] Every number has a stated mechanism or consequence attached
+  [ ] No superlatives, urgency, or competitor call-outs
+  [ ] If disclosing something personal, it resolves into a business/science
+      lesson within the same paragraph
+  [ ] Ends on an action for the reader aimed outward, not a CTA
+  [ ] Signed "Meera"
+
+NOTE ON SCOPE: this guide is fit to one person's 15 samples. It captures her
+tics reliably; treat it as a lens on Meera Pillai specifically, not a
+general "skincare founder" voice template.

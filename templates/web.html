@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Content Desk</title>
+<meta name="description" content="Turn a raw note into a scored, news-backed LinkedIn draft.">
+<style>
+  :root {
+    --bg: #f7f5f1; --card: #ffffff; --ink: #1f2328; --muted: #6b6f76; --line: #e4e0d8;
+    --accent: #2f5d50; --accent-ink: #ffffff; --warn: #9a6a00; --warn-bg: #fdf5e1;
+    --fail: #a3312a; --fail-bg: #fbeceb; --ok: #2f6b3a; --ok-bg: #e9f4ec;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #17191c; --card: #1f2226; --ink: #e8e6e1; --muted: #9a9ea5; --line: #33373d;
+      --accent: #7fb8a4; --accent-ink: #10231d; --warn: #e3b555; --warn-bg: #2d2615;
+      --fail: #ef8a82; --fail-bg: #331c1a; --ok: #8fcf9b; --ok-bg: #19291d;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 32px 16px 80px; }
+  h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .muted { color: var(--muted); font-size: 14px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin-top: 18px; }
+  textarea { width: 100%; min-height: 130px; font: inherit; color: var(--ink); background: var(--bg);
+             border: 1px solid var(--line); border-radius: 8px; padding: 12px; resize: vertical; }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 12px; }
+  button { font: inherit; font-size: 14px; border: 1px solid var(--line); background: var(--card); color: var(--ink);
+           padding: 8px 14px; border-radius: 8px; cursor: pointer; }
+  button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  button:disabled { opacity: .55; cursor: progress; }
+  .chip { display: inline-block; font-weight: 700; font-size: 13px; padding: 3px 10px; border-radius: 999px; font-variant-numeric: tabular-nums; }
+  .chip.pass { background: var(--ok-bg); color: var(--ok); }
+  .chip.gate { background: var(--warn-bg); color: var(--warn); }
+  .chip.err { background: var(--fail-bg); color: var(--fail); }
+  .scores { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .stage { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 12px; }
+  .stage h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 4px; }
+  .post { white-space: pre-wrap; font: 16px/1.65 Georgia, "Iowan Old Style", serif; background: var(--bg);
+          border-radius: 8px; padding: 16px; margin-top: 8px; }
+  .flag { font-size: 13px; padding: 5px 9px; border-radius: 6px; margin-top: 5px; }
+  .flag.fail { background: var(--fail-bg); color: var(--fail); }
+  .flag.warn { background: var(--warn-bg); color: var(--warn); }
+  .news { margin-top: 8px; font-size: 14px; }
+  .news a { color: var(--accent); font-weight: 600; }
+  .news .why { color: var(--muted); font-size: 13px; }
+  .q { font-weight: 600; margin-top: 6px; }
+  .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--line); border-top-color: var(--accent);
+             border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: -2px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .hidden { display: none; }
+  details summary { cursor: pointer; color: var(--muted); font-size: 13px; }
+  pre.log { white-space: pre-wrap; font: 12px/1.5 ui-monospace, Menlo, monospace; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Content Desk</h1>
+  <div class="muted">Paste a raw note. It gets scored, researched on Google News, and turned into a LinkedIn draft in Meera's voice. Or, if it isn't ready, you get feedback on what's missing.</div>
+  {% if not has_key %}<div class="card flag warn">This deployment has no GEMINI_API_KEY set, so it can't run yet.</div>{% endif %}
+
+  <div class="card">
+    <textarea id="note" placeholder="e.g. We put Batch 12 of the toner on hold. It came back at pH 6.1 instead of 5.5 because our water supplier changed. We adjusted it with citric acid and now test incoming water every week. Nobody treats water as a raw material."></textarea>
+    <div class="row">
+      <button class="primary" id="go" onclick="runNote()">Run pipeline</button>
+      <span class="muted" id="status"></span>
+    </div>
+  </div>
+
+  <div id="out"></div>
+</div>
+
+<script>
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const chip = (label, n) => `<span class="chip ${n >= 7 ? 'pass' : 'gate'}">${esc(label)} ${n}/10</span>`;
+const ROLE = {supports: 'supports the point', context: 'context / why now', adjacent: 'adjacent: related reading'};
+
+async function runNote() {
+  const text = document.getElementById('note').value.trim();
+  const btn = document.getElementById('go'), status = document.getElementById('status'), out = document.getElementById('out');
+  if (text.length < 5) { status.textContent = 'Type a note first.'; return; }
+  btn.disabled = true;
+  status.innerHTML = '<span class="spinner"></span> Scoring, searching and drafting. This takes up to a minute.';
+  out.innerHTML = '';
+  try {
+    const r = await fetch('/api/run', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({text})});
+    const j = await r.json().catch(() => ({error: `Server error (${r.status}).`}));
+    if (!r.ok) throw new Error(j.error || `Server error (${r.status}).`);
+    out.innerHTML = render(j);
+    status.textContent = '';
+  } catch (e) {
+    status.textContent = '';
+    out.innerHTML = `<div class="card"><span class="chip err">error</span> ${esc(e.message)}</div>`;
+  }
+  btn.disabled = false;
+}
+
+function render(j) {
+  if (j.outcome === 'error') return `<div class="card"><span class="chip err">error</span> ${esc(j.error)}</div>`;
+  const s1 = j.stage1 || {};
+  let h = '<div class="card">';
+
+  // Score first
+  h += '<div class="scores">';
+  if (j.post_grade) h += chip('Post score', j.post_grade.score) + `<span class="muted">${esc(j.post_grade.reason)}</span>`;
+  else h += chip('Score', j.score) + '<span class="muted">A note needs 7+ to become a draft.</span>';
+  h += '</div>';
+
+  if (j.outcome === 'feedback') {
+    h += `<div class="stage"><h3>Feedback</h3>${esc(s1.promising)}
+          <div style="margin-top:6px"><b>What's missing:</b> ${esc(s1.missing)}</div>
+          <div class="q">${esc(s1.question)}</div></div>`;
+  } else {
+    h += `<div class="stage"><h3>Draft</h3><div class="post" id="post">${esc(j.body)}</div>
+          <div class="row"><button onclick="copyPost(this)">Copy post</button>
+          <span class="muted">${j.report.words} words</span></div>`;
+    for (const c of j.report.checks.filter(c => c.level !== 'ok'))
+      h += `<div class="flag ${c.level}"><b>${esc(c.rule)}</b>: ${esc(c.detail)}</div>`;
+    h += '</div>';
+
+    h += '<div class="stage"><h3>Related news</h3>';
+    if (!j.evidence.length) h += '<div class="muted">Google News returned nothing for this one.</div>';
+    for (const e of j.evidence)
+      h += `<div class="news"><a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.title)}</a>
+            <span class="muted">${esc(e.source)}, ${esc(e.published)} · ${esc(ROLE[e.role] || e.role)}</span>
+            ${e.connection ? `<div class="why">${esc(e.connection)}</div>` : ''}</div>`;
+    h += '<div class="muted" style="margin-top:6px">Headlines only: open the link and check it before posting.</div></div>';
+  }
+
+  // How it got here
+  h += '<div class="stage"><details><summary>How it got here</summary>';
+  h += `<p><b>Stage 1 · Evaluate &amp; score:</b> ${chip('idea', j.score)} ${esc(s1.justification)}
+        ${s1.borderline && s1.rounding_note ? `<br><span class="muted">Rounded down: ${esc(s1.rounding_note)}</span>` : ''}</p>`;
+  h += `<p><b>Stage 2 · Gatekeeper:</b> ${j.score >= 7 ? 'Passed (7 or above).' : 'Stopped: 6 or below, so feedback instead of a draft.'}</p>`;
+  if (j.thesis) {
+    h += `<p><b>Stage 3 · Research:</b> ${esc(j.thesis)}</p><ul>`;
+    for (const s of j.searches) h += `<li class="muted">"${esc(s.query)}": ${s.results.length} result(s), ${s.usable ? 'usable' : 'not usable'}${s.reason ? ' · ' + esc(s.reason) : ''}</li>`;
+    h += '</ul>';
+  }
+  if (j.post_grade) {
+    const g = j.post_grade;
+    h += `<p><b>Stage 4 · Post score:</b> hook ${g.hook}/2 · insight ${g.insight}/2 · voice ${g.voice}/2 · evidence ${g.evidence}/2 · takeaway ${g.takeaway}/2</p>`;
+  }
+  h += `<pre class="log">${esc((j.log || []).join('\n'))}</pre></details></div>`;
+  return h + '</div>';
+}
+
+async function copyPost(btn) {
+  await navigator.clipboard.writeText(document.getElementById('post').textContent);
+  btn.textContent = 'Copied';
+  setTimeout(() => btn.textContent = 'Copy post', 1500);
+}
+</script>
+</body>
+</html>
